@@ -17,25 +17,28 @@ class PemesananResource extends Resource
 {
     protected static ?string $model = Pemesanan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('pelanggan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('tanggal_pesanan')
-                    ->required(),
-                Forms\Components\DatePicker::make('tanggal_acara')
-                    ->required(),
-                Forms\Components\TextInput::make('total_harga')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Forms\Components\Select::make('pelanggan_id')
+                ->relationship('pelanggan', 'nama_pelanggan')
+                ->required(),
+
+                Forms\Components\DatePicker::make('tanggal_pesanan')->required(),
+                Forms\Components\DatePicker::make('tanggal_acara')->required(),
+
+                Forms\Components\Select::make('status')
+                ->options([
+                'menunggu' => 'Menunggu',
+                'diproses' => 'Diproses',
+                'selesai' => 'Selesai',
+                ])
+                ->required(),
+
             ]);
     }
 
@@ -43,18 +46,13 @@ class PemesananResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('pelanggan_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tanggal_pesanan')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tanggal_acara')
-                    ->date()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('pelanggan.nama_pelanggan')->label('Pelanggan'),
+                Tables\Columns\TextColumn::make('tanggal_pesan'),
+                Tables\Columns\TextColumn::make('tanggal_acara'),
                 Tables\Columns\TextColumn::make('total_harga')
-                    ->numeric()
-                    ->sortable(),
+                ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.')),
+                Tables\Columns\BadgeColumn::make('status'),
+
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pelanggan extends Model
 {
-    //
+    protected $fillable = [
+    'nama_pelanggan',
+    'no_hp',
+    'alamat',
+];
+
+public function pemesanans()
+{
+    return $this->hasMany(Pemesanan::class);
+}
+
 }

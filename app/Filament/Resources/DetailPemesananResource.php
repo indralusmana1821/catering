@@ -23,18 +23,17 @@ class DetailPemesananResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('pemesanan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('menu_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('jumlah')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('subtotal')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('pemesanan_id')
+                ->relationship('pemesanan', 'id')
+                ->required(),
+
+                Forms\Components\Select::make('menu_id')
+                ->relationship('menu', 'nama_menu')
+                ->required(),
+
+                Forms\Components\TextInput::make('jumlah')->numeric()->required(),
+                Forms\Components\TextInput::make('subtotal')->numeric()->required(),
+
             ]);
     }
 
@@ -42,18 +41,12 @@ class DetailPemesananResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('pemesanan_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('menu_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('jumlah')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('pemesanan.id')->label('ID Pesanan'),
+                Tables\Columns\TextColumn::make('menu.nama_menu'),
+                Tables\Columns\TextColumn::make('jumlah'),
                 Tables\Columns\TextColumn::make('subtotal')
-                    ->numeric()
-                    ->sortable(),
+                ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.')),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

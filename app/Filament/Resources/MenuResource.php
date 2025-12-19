@@ -17,20 +17,25 @@ class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_menu')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('jenis')
-                    ->required(),
+                Forms\Components\TextInput::make('nama_menu')->required(),
+
+                Forms\Components\Select::make('jenis')
+                ->options([
+                'paket' => 'Paket',
+                'satuan' => 'Satuan',
+                ])
+                ->required(),
+
                 Forms\Components\TextInput::make('harga')
-                    ->required()
-                    ->numeric(),
+                ->numeric()
+                ->required(),
+
             ]);
     }
 
@@ -38,12 +43,12 @@ class MenuResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_menu')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('jenis'),
+                Tables\Columns\TextColumn::make('nama_menu')->searchable(),
+                Tables\Columns\TextColumn::make('jenis')->badge(),
+
                 Tables\Columns\TextColumn::make('harga')
-                    ->numeric()
-                    ->sortable(),
+                ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.')),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

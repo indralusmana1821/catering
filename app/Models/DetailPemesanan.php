@@ -6,5 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailPemesanan extends Model
 {
-    //
+    protected $fillable = [
+    'pemesanan_id',
+    'menu_id',
+    'jumlah',
+    'subtotal',
+];
+
+public function pemesanan()
+{
+    return $this->belongsTo(Pemesanan::class);
+}
+
+public function menu()
+{
+    return $this->belongsTo(Menu::class);
+}
+
 }

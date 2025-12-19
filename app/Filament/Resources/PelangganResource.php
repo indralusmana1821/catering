@@ -17,21 +17,16 @@ class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_pelanggan')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('no_hp')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('alamat')
-                    ->required()
-                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('nama_pelanggan')->required(),
+                Forms\Components\TextInput::make('no_hp')->required(),
+                Forms\Components\Textarea::make('alamat')->required(),
+
             ]);
     }
 
@@ -39,10 +34,10 @@ class PelangganResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_pelanggan')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('no_hp')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('nama_pelanggan')->searchable(),
+                    Tables\Columns\TextColumn::make('no_hp'),
+                    Tables\Columns\TextColumn::make('alamat')->limit(30),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
